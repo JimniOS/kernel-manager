@@ -1,14 +1,8 @@
 project('KernelManager', ['c','cpp'])
 
-if get_option('buildtype') == 'release'
-  add_project_arguments('-O3', '-flto',  language : 'c')
-endif
 
-if get_option('buildtype') == 'debug'
-  add_project_arguments('-Og', '-g3',  language : 'c')
-endif
-
-add_project_arguments('-Wno-unused-result',language: 'c')
+add_project_arguments('-Wno-unused-result',language: 'c') # Stop stupid warnings
+add_project_arguments('-Werror=implicit-function-declaration',language: ['c','cpp']) # Panic compiler if a undeclared function is used
 
 libz = dependency('zlib')
 
@@ -19,7 +13,7 @@ sources = files([
 
 file_helper = library('file_helper', sources : ['src/utils/file_utils/files.cpp', 'src/utils/file_utils/files.hpp'])
 zlib_helper = library('zlib_helper', sources : ['src/utils/file_utils/gz_config.c', 'src/utils/file_utils/gz_config.h'],dependencies : libz)
-md5_lib = library('md5_lib' , sources: ['src/utils/md5.c','src/utils/md5.h'],c_args:['-Werror=implicit-function-declaration'])
+md5_lib = library('md5_lib' , sources: ['src/utils/md5.c','src/utils/md5.h'])
 
 executable('kernel-manager', 
         sources,dependencies : libz , 
