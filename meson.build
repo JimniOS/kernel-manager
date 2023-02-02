@@ -15,11 +15,12 @@ file_helper = library('file_helper', sources : ['src/utils/file_utils/files.cpp'
 zlib_helper = library('zlib_helper', sources : ['src/utils/file_utils/gz_config.c', 'src/utils/file_utils/gz_config.h'],dependencies : libz)
 md5_lib = library('md5_lib' , sources: ['src/utils/md5.c','src/utils/md5.h'])
 
+hello_lib = library('hello_lib', sources: ['src/get_patches.cpp','src/get_patches.hpp'],dependencies: dependency('libcurl'))
 executable('kernel-manager', 
         sources,dependencies : libz , 
         c_args:['-fno-stack-protector', 
                 '-Wno-unused-result',
                 '-Wno-uninitialized',
                 ],
-        link_with: [zlib_helper,file_helper,md5_lib],
+        link_with: [zlib_helper,file_helper,md5_lib,hello_lib],
         )

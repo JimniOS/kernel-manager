@@ -16,6 +16,7 @@
 #include "utils/md5.h"
 #include <assert.h>
 #include <getopt.h>
+#include "get_patches.hpp"
 
 static bool _verbose;
 static const char *custom_config_path = NULL;
@@ -66,4 +67,6 @@ int main(int argc, char **argv)
                         break;
                 }
         }
+        get_patches();
+        
 }
