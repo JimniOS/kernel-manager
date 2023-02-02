@@ -1,4 +1,4 @@
-#NOTE
+# NOTE
 This project is still WIP, please help us to make this functional!!!
 ## The build system
 - Setup the release enviroment with 
