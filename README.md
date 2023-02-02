@@ -1,5 +1,7 @@
 # NOTE
 This project is still WIP, please help us to make this functional!!!
+compile - *```cd target/release && meson compile -j=$(nproc)```
+
 ## The build system
 - Setup the release enviroment with 
   * ```meson setup target/release --buildtype=release --optimization=3 --strip -Db_lto=true -b_lto_threads=$(nproc)```
