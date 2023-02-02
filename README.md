@@ -1,3 +1,5 @@
+#NOTE
+This project is still WIP, please help us to make this functional!!!
 ## The build system
 - Setup the release enviroment with 
   * ```meson setup target/release --buildtype=release --optimization=3 --strip -Db_lto=true -b_lto_threads=$(nproc)```
