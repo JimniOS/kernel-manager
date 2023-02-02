@@ -1,7 +1,3 @@
-#ifdef __cplusplus
-#pragma warning("Not recomended to compile the file with a C++ compiler. Consider using a C compiler");
-#endif
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
