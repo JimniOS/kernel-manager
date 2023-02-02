@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install meson
+      run: sudo apt install meson
     - uses: actions/checkout@v3
 
     - name: Configure Meson 
