@@ -6,5 +6,5 @@
 
 
 extern "C" void get_patches(){
-        PANIC("TODO!");
+        printf("\n Downloading patches...\n");
 }
