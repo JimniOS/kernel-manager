@@ -6,3 +6,5 @@
 - You can specify a compiler to use using the `CC` and `CXX` compiler flags
   * Example: You can use the llvm toolchain by setting up the build directory by using:
     * `CC=clang CXX=clang++ CC_LD=lld CXX_LD=lld`
+
+[![Meson](https://github.com/JimniLinux/kernel-manager/actions/workflows/meson.yml/badge.svg)](https://github.com/JimniLinux/kernel-manager/actions/workflows/meson.yml)
