@@ -251,22 +251,7 @@ md5sum(FILE *file_src, FILE *dest)
         }
         if (diff != 0)
         {
-
-                PANIC("Checksum error\n");
-                LOG("Checksum of first file: ");
-
-                for (int i = 0; i < 16; i++)
-                {
-                        fprintf(stderr, "0x%x , ",result_src[i]);
-                }
-
-                LOG("Checksum of second file: ");
-                for (int i = 0; i < 16; i++)
-                {
-                        fprintf(stderr, "0x%x , ",result_dest[i]);
-                }
-                fprintf(stderr,"\n");
-                
+                PANIC("Error comparing file checksums");
                 exit(0);
         }
 }
