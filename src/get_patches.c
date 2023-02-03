@@ -1,12 +1,13 @@
-#include "get_patches.hpp"
-#include <iostream>
+#include "get_patches.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include "defs.h"
 #include <curl/curl.h>
 #include "utils/file_utils/files.hpp"
 
 // download file from url to file
 // return 0 on success
-extern "C" int
+int 
 get_patches()
 {
         const char *url = "https://files.testfile.org/ZIPC/15MB-Corrupt-Testfile.Org.zip";

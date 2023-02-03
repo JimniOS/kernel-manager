@@ -16,7 +16,7 @@
 #include "utils/md5.h"
 #include <assert.h>
 #include <getopt.h>
-#include "get_patches.hpp"
+#include "get_patches.h"
 
 static const char *custom_config_path = NULL;
 static const char *custom_output_path = NULL;

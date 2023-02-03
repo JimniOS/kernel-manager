@@ -17,7 +17,7 @@ file_helper = library('file_helper', sources : ['src/utils/file_utils/files.cpp'
 zlib_helper = library('zlib_helper', sources : ['src/utils/file_utils/gz_config.c', 'src/utils/file_utils/gz_config.h'],dependencies : libz)
 md5_lib = library('md5_lib' , sources: ['src/utils/md5.c','src/utils/md5.h'])
 
-curl_lib = library('curl_lib', sources: ['src/get_patches.cpp','src/get_patches.hpp'],dependencies: dependency('libcurl'),link_with:file_helper)
+curl_lib = library('curl_lib', sources: ['src/get_patches.c','src/get_patches.h'],dependencies: dependency('libcurl'),link_with:file_helper)
 executable('kernel-manager', 
         sources,dependencies : libz , 
         c_args:['-fno-stack-protector', 
