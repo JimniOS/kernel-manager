@@ -6,7 +6,7 @@
 
 // download file from url to file
 // return 0 on success
-extern "C" int 
+extern "C" int
 get_patches()
 {
         const char *url = "https://files.testfile.org/ZIPC/15MB-Corrupt-Testfile.Org.zip";
@@ -23,10 +23,15 @@ get_patches()
                 curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
                 curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
                 res = curl_easy_perform(curl);
+                if (res != CURLE_OK)
+                {
+                        PANIC("Curling the file failed. Curl returned a non-ok status\n");
+                }
                 curl_easy_cleanup(curl);
                 fclose(fp);
         }
-        else{
+        else
+        {
                 PANIC("Curling the file failed\n");
                 exit(1);
         }

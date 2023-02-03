@@ -31,7 +31,8 @@ terminate_intr(int signal)
  *
  * @param term_addr Misc option. Defaults to *0x0
  */
-static void capture_terminate(jmp_buf term_addr)
+static void 
+capture_terminate(jmp_buf term_addr)
 {
         terminate_addr = term_addr;
         signal(SIGHUP, terminate_intr);
@@ -45,7 +46,8 @@ static void capture_terminate(jmp_buf term_addr)
  * @brief Return all capture handles to system.
  *
  */
-static void uncapture_terminate(void)
+static void 
+uncapture_terminate(void)
 {
         terminate_addr = NULL;
         signal(SIGHUP, SIG_DFL);
@@ -56,7 +58,8 @@ static void uncapture_terminate(void)
         signal(SIGUSR2, SIG_DFL);
 }
 
-int get_config(FILE *gz_file, FILE *output_file)
+int 
+get_config(FILE *gz_file, FILE *output_file)
 {
         capture_terminate(NULL);
         int ret;

@@ -19,13 +19,12 @@
 static void print_error_and_exit(const char *__restrict__ name, int code,
                                  const char *__restrict__ error_msg);
 
-static void create_file(const char *__restrict__ path);
 static void *terminate_addr = NULL;
 
 static void
 terminate_intr(int signal)
 {
-        PANIC("\nCaught termination signal %d\n");
+        PANIC("\nCaught termination signal %d\n",signal);
         _exit(signal);
 }
 
@@ -35,7 +34,8 @@ terminate_intr(int signal)
  *
  * @param term_addr Misc option. Defaults to *0x0
  */
-static void capture_terminate(jmp_buf term_addr)
+static void 
+capture_terminate(jmp_buf term_addr)
 {
         terminate_addr = term_addr;
         signal(SIGHUP, terminate_intr);
@@ -49,7 +49,8 @@ static void capture_terminate(jmp_buf term_addr)
  * @brief Return all capture handles to system.
  *
  */
-static void uncapture_terminate(void)
+static void 
+uncapture_terminate(void)
 {
         terminate_addr = NULL;
         signal(SIGHUP, SIG_DFL);
@@ -73,12 +74,6 @@ print_error_and_exit(
             "\n\tErr:  %s\n",
             name, code, error_msg);
         exit(ERR);
-}
-
-static void
-create_file(const char *path)
-{
-        fclose(fopen(path, "w"));
 }
 
 extern "C" FILE *
@@ -110,7 +105,6 @@ access_file(const char *__restrict__ path, const char *__restrict__ permissions)
 
         if (create && tokens.size() > 1)
         {
-                LOG("%d",tokens.size());
                 std::string directory_tracker = tokens[0];
                 for (auto elem : tokens)
                 {
@@ -166,6 +160,7 @@ access_file(const char *__restrict__ path, const char *__restrict__ permissions)
 extern "C" void
 copy_binaries(const char *src, const char *dest)
 {
+        capture_terminate(NULL);
         printf("Copying file %s to %s... ", src, dest);
         std::string buffer;
         // Reads buffer directly from disk
@@ -193,4 +188,5 @@ copy_binaries(const char *src, const char *dest)
         }
         printf("Done!\n");
         dest_file.close();
+        uncapture_terminate();
 }

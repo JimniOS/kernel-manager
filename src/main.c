@@ -18,10 +18,8 @@
 #include <getopt.h>
 #include "get_patches.hpp"
 
-static bool _verbose;
 static const char *custom_config_path = NULL;
 static const char *custom_output_path = NULL;
-static const char *custom_kernel_path = NULL;
 int main(int argc, char **argv)
 {
         int c;
