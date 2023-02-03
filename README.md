@@ -4,7 +4,7 @@ compile - *```cd target/release && meson compile -j=$(nproc)```
 
 ## The build system
 - Setup the release enviroment with 
-  * ```meson setup target/release --buildtype=release --optimization=3 --strip -Db_lto=true -b_lto_threads=$(nproc)```
+  * ```meson setup target/release --buildtype=release --optimization=3 --strip -Db_lto=true -Db_lto_threads=$(nproc)```
 - Setup the debug eviroment with
   *`meson setup target/debug --buildtype=debug --optimization=g`
 - You can specify a compiler to use using the `CC` and `CXX` compiler flags
