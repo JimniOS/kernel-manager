@@ -67,6 +67,5 @@ int main(int argc, char **argv)
                         break;
                 }
         }
-        get_patches();
         
 }

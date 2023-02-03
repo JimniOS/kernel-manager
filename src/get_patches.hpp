@@ -2,7 +2,7 @@
 extern "C"
 {
 #endif
-        void get_patches();
+        int get_patches();
 
 #ifdef __cplusplus
 }

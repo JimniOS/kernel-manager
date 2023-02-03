@@ -1,22 +1,23 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <fstream>
 #include <signal.h>
 #include <setjmp.h>
+#include <fstream>
+#include <sstream>
+#include <filesystem>
+
 #include "../md5.h"
 #include "../../defs.h"
-
+#include <vector>
 #include "files.hpp"
 
 #define CHUNK 32768
 
-static void print_error_and_exit(const char *__restrict__ name, int code, 
+static void print_error_and_exit(const char *__restrict__ name, int code,
                                  const char *__restrict__ error_msg);
-
 
 static void create_file(const char *__restrict__ path);
 static void *terminate_addr = NULL;
@@ -59,7 +60,7 @@ static void uncapture_terminate(void)
         signal(SIGUSR2, SIG_DFL);
 }
 
-static void 
+static void
 print_error_and_exit(
     const char *__restrict__ name,
     int code,
@@ -74,7 +75,7 @@ print_error_and_exit(
         exit(ERR);
 }
 
-static void 
+static void
 create_file(const char *path)
 {
         fclose(fopen(path, "w"));
@@ -83,6 +84,60 @@ create_file(const char *path)
 extern "C" FILE *
 access_file(const char *__restrict__ path, const char *__restrict__ permissions)
 {
+        std::string str_path = path;
+        std::string perms = permissions;
+        bool create = false;
+
+        for (auto character : perms)
+        {
+                if (character == 'w')
+                {
+                        create = true;
+                        // we will create a file in this case
+                        true;
+                }
+        }
+
+        std::vector<std::string> tokens;
+
+        std::stringstream stream(str_path);
+        std::string mid;
+
+        while (getline(stream, mid, '/'))
+        {
+                tokens.push_back(mid);
+        }
+
+        if (create && tokens.size() > 1)
+        {
+                LOG("%d",tokens.size());
+                std::string directory_tracker = tokens[0];
+                for (auto elem : tokens)
+                {
+                        if (tokens.back() == elem)
+                        {
+                                break;
+                        }
+                        if (elem != tokens[0])
+                        {
+                                directory_tracker += "/" + elem;
+                        }
+                }
+                std::filesystem::create_directory(directory_tracker);
+
+                directory_tracker += "/" + tokens.back();
+                LOG("Creating file: %s", directory_tracker.c_str());
+                std::ofstream file(directory_tracker);
+                file << "";
+                file.close();
+        }
+        else{
+                std::ofstream file(str_path);
+                file << "";
+                file.close();
+        }
+
+
         int code = 0;
         if (strcmp(permissions, "r") == 0)
         {
@@ -90,8 +145,6 @@ access_file(const char *__restrict__ path, const char *__restrict__ permissions)
         }
         else if (strcmp(permissions, "w") == 0)
         {
-                // we create the file when we have to write
-                create_file(path);
                 code = access(path, W_OK);
         }
         else if (strcmp(permissions, "f") == 0)
@@ -110,7 +163,7 @@ access_file(const char *__restrict__ path, const char *__restrict__ permissions)
         return NULL;
 }
 
-extern "C" void 
+extern "C" void
 copy_binaries(const char *src, const char *dest)
 {
         printf("Copying file %s to %s... ", src, dest);

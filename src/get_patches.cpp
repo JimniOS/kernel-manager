@@ -2,10 +2,12 @@
 #include <iostream>
 #include "defs.h"
 #include <curl/curl.h>
+#include "utils/file_utils/files.hpp"
 
 // download file from url to file
 // return 0 on success
-extern "C" void get_patches()
+extern "C" int 
+get_patches()
 {
         const char *url = "https://files.testfile.org/ZIPC/15MB-Corrupt-Testfile.Org.zip";
         const char *file = "patches/test_patches_file.zip";
@@ -16,7 +18,7 @@ extern "C" void get_patches()
         curl = curl_easy_init();
         if (curl)
         {
-                fp = fopen(file, "wb");
+                fp = access_file(file, "wb");
                 curl_easy_setopt(curl, CURLOPT_URL, url);
                 curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
                 curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
@@ -24,4 +26,10 @@ extern "C" void get_patches()
                 curl_easy_cleanup(curl);
                 fclose(fp);
         }
+        else{
+                PANIC("Curling the file failed\n");
+                exit(1);
+        }
+
+        return 0;
 }
