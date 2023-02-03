@@ -120,7 +120,7 @@ access_file(const char *__restrict__ path, const char *__restrict__ permissions)
                 std::filesystem::create_directory(directory_tracker);
 
                 directory_tracker += "/" + tokens.back();
-                LOG("Creating file: %s", directory_tracker.c_str());
+                LOG("[libfile_helper] Creating file: %s", directory_tracker.c_str());
                 std::ofstream file(directory_tracker);
                 file << "";
                 file.close();
