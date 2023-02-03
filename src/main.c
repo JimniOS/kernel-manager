@@ -91,8 +91,10 @@ int main(int argc, char **argv)
         }
         else if (custom_kernel_path != NULL && config_output_path == NULL)
         {
-                custom_kernel_path = malloc((sizeof(custom_kernel_path) + sizeof(".config")) * sizeof(char));
-                sprintf(config_output_path, "%s/.config", custom_kernel_path);
+                char tmp_buf[1024] = {};
+                // custom_kernel_path = malloc((sizeof(custom_kernel_path) + sizeof(".config")) * sizeof(char));
+                sprintf(tmp_buf,"%s/.config",custom_kernel_path);
+                config_output_path=tmp_buf;
                 LOG("CONFIG: %s", config_output_path);
         }
         else if (config_output_path != NULL && custom_kernel_path == NULL)
