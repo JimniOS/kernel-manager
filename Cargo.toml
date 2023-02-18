@@ -1,0 +1,17 @@
+[package]
+name = "kernel-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+strip = true
+lto = true
+opt-level = 3
+
+
+[dependencies]
+md5-rs ="0.1.5"
+flate2 = "1.0"
+regex = "1.7.1"
