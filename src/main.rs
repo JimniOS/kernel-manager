@@ -1,14 +1,20 @@
-pub mod gz;
-pub mod kernel;
-pub mod utils;
+use relm4::prelude::*;
 
-fn main() {
-    let mut kernel = kernel::Kernel::new(".jimni", kernel::NewObjectPathType::Makefile);
-    kernel.set_gz("/proc/config.gz");
-    kernel.get_kernel_version();
-    kernel
-        .add_patch("Random.patch")
-        .add_patch("Random_incompatible.patch")
-        .add_patch("Random copy.patch");
-    println!("{:#?}", kernel);
+pub mod ui;
+use ui::main::*;
+
+pub const APP_ID:&str = "kernel_manager";
+pub const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const APP_DEBUG:bool= cfg!(debug_assertions);
+
+
+fn main(){
+    adw::init().expect("Failed to initialise LibAdwaita");
+
+    // set app title
+    gtk::glib::set_application_name("Kernel Manager");
+    gtk::glib::set_program_name(Some("Kernel manager"));
+
+    let app = RelmApp::new(APP_ID);
+    app.run::<App>(());
 }

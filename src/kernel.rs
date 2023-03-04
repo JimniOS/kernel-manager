@@ -11,7 +11,6 @@ enum ConfigType {
     GZIP,
     CONFIG,
     DISTKERNEL,
-    
 }
 
 /// A way to specify the distro configs.
@@ -183,7 +182,7 @@ impl Kernel {
         self.internal_version = get_internal_version(&output_str)
     }
 
-    pub fn add_patch(&mut self, patch_path: &str) -> &mut Self{
+    pub fn add_patch(&mut self, patch_path: &str) -> &mut Self {
         let patch = crate::utils::patches::Patch::new(patch_path);
         if patch.internal_version == self.internal_version {
             self.patch_list.push(patch);

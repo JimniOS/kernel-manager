@@ -2,7 +2,8 @@
 name = "kernel-rs"
 version = "0.1.0"
 edition = "2021"
-
+license = "GPL-3.0"
+build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [profile.release]
@@ -10,8 +11,13 @@ strip = true
 lto = true
 opt-level = 3
 
+[build-dependencies]
+glib-build-tools = "0.16"
 
 [dependencies]
 md5-rs ="0.1.5"
 flate2 = "1.0"
 regex = "1.7.1"
+relm4 = { version = "0.5", features = ["macros", "libadwaita"] }
+gtk = { package = "gtk4", version = "0.5", features = ["v4_8"] }
+adw = { package = "libadwaita", version = "0.2", features = ["v1_2"] }
