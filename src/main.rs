@@ -16,5 +16,5 @@ fn main(){
     gtk::glib::set_program_name(Some("Kernel manager"));
 
     let app = RelmApp::new(APP_ID);
-    app.run::<App>(());
+    app.run::<GeneralApp>(());
 }
