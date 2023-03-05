@@ -1,5 +1,5 @@
 use md5_rs;
-use std::{fmt::Error, fs, io::Write};
+use std::{fs, io::Write};
 
 fn get_hash(string: &str) -> String {
     let mut ctx = md5_rs::Context::new();
