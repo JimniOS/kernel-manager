@@ -1,7 +1,5 @@
 use flate2::read::GzDecoder;
 use std::io::prelude::*;
-
-
 pub fn read_gz(path:&str) -> Option<String>{
 
     let bytes = std::fs::read(path);
@@ -15,5 +13,3 @@ pub fn read_gz(path:&str) -> Option<String>{
 
     Some(ret_str)
 }
-
-

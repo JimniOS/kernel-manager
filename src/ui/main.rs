@@ -6,7 +6,6 @@ use relm4::prelude::*;
 
 use adw::prelude::*;
 
-pub static mut random_counter:f32 = 6.0;
 #[derive(Debug, Clone)]
 pub enum GeneralAppMessages {
     Add,
@@ -35,7 +34,11 @@ impl AsyncFactoryComponent for KernelListComponent {
             set_subtitle: "Amogus",
             set_sensitive: true,
             add_suffix = &gtk::Button{
-                set_icon_name: "window-new-suffix",
+                #[watch]
+                set_icon_name: match self.installed{
+                    false => "document-save-symbolic",
+                    true => "user-trash-symbolic"
+                },
                 add_css_class: "flat",
                 set_valign: gtk::Align::Center,
                 connect_clicked[sender,index] => move |_|{
@@ -86,7 +89,7 @@ impl SimpleComponent for GeneralApp {
             kernel_list: AsyncFactoryVecDeque::new(adw::PreferencesGroup::new(), sender.input_sender()),
         };
         // testing vec
-        let list = vec![("Linux 5.15".to_string(),false),("Linux 5.16".to_string(),true)];
+        let list = vec![("Linux 5.15".to_string(),false),("Linux 5.16".to_string(),false)];
         for (name,managed) in list{
             model.kernel_list.guard().push_back((name.clone(),managed));
         }
@@ -99,15 +102,16 @@ impl SimpleComponent for GeneralApp {
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>){
         match msg{
             GeneralAppMessages::Add => {
-                unsafe{
-                    random_counter+=0.1;
-                    self.kernel_list.guard().push_back((format!("Kernel {:#0.1}",random_counter),false));
-                }   
+                println!("Unimplemented");
             }
             GeneralAppMessages::Remove(index) =>{
                 if self.kernel_list.get(index.current_index()).unwrap().installed{
-                    self.kernel_list.guard().remove(index.current_index());
+                    // self.kernel_list.guard().remove(index.current_index());
+                    self.kernel_list.guard().get_mut(index.current_index()).unwrap().installed=false;
+                    println!("Unimplemented");
+
                 }else{
+                    self.kernel_list.guard().get_mut(index.current_index()).unwrap().installed=true;
                     println!("Unimplemented");
                 }
             }
@@ -133,21 +137,6 @@ impl SimpleComponent for GeneralApp {
                     }
                     
                 },
-                gtk::Box{
-                    set_orientation: gtk::Orientation::Horizontal,
-                    set_halign: gtk::Align::Center,
-                    set_valign: gtk::Align::Start,
-                    set_vexpand: true,
-
-
-                    gtk::Button {
-                        set_label: "Add Kernel",
-                        set_css_classes: &["suggested-action", "pill"],    
-                        set_valign: gtk::Align::Center,
-
-                        connect_clicked => GeneralAppMessages::Add,
-                    }
-                }
             }
             
 
