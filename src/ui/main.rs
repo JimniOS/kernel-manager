@@ -3,8 +3,8 @@ use relm4::component::*;
 use relm4::factory::AsyncFactoryVecDeque;
 use relm4::factory::*;
 use relm4::prelude::*;
-
 use adw::prelude::*;
+use super::lib::kernel::*;
 
 #[derive(Debug, Clone)]
 pub enum GeneralAppMessages {
@@ -71,12 +71,13 @@ impl AsyncFactoryComponent for KernelListComponent {
 
 #[derive(Debug)]
 pub struct GeneralApp {
+    kernel_vec: Vec<Kernel>,
     kernel_list: AsyncFactoryVecDeque<KernelListComponent>,
 }
 
 #[relm4::component(pub)]
 impl SimpleComponent for GeneralApp {
-    type Init = ();
+    type Init = Vec<Kernel>;
     type Input = GeneralAppMessages;
     type Output = ();
     fn init(
@@ -87,12 +88,12 @@ impl SimpleComponent for GeneralApp {
 
         let mut model = Self {
             kernel_list: AsyncFactoryVecDeque::new(adw::PreferencesGroup::new(), sender.input_sender()),
+            kernel_vec: _init,
         };
-        // testing vec
-        let list = vec![("Linux 5.15".to_string(),false),("Linux 5.16".to_string(),false)];
-        for (name,managed) in list{
-            model.kernel_list.guard().push_back((name.clone(),managed));
-        }
+
+        model.kernel_vec.iter().for_each(|object|{
+            model.kernel_list.guard().push_back((object.version.clone(),false)); 
+        });
 
         let kernel_list = model.kernel_list.widget();
         let widgets = view_output!();
@@ -125,6 +126,7 @@ impl SimpleComponent for GeneralApp {
             set_vexpand: true,
 
             gtk::Box{
+                set_valign: gtk::Align::Center,
                 set_orientation: gtk::Orientation::Vertical,
                 set_spacing: 32,
                 adw::PreferencesPage {
