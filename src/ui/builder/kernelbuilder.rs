@@ -15,6 +15,7 @@ pub struct Builder{
 pub enum BuilderMsg{
     Show,
     Build,
+    CloseDialog,
 }
 #[derive(Debug)]
 pub enum BuilderMsgOutput{
@@ -48,6 +49,11 @@ impl SimpleComponent for Builder {
                 self.is_active = true;
             }
             BuilderMsg::Build => println!("how did you call this?"),
+            BuilderMsg::CloseDialog => {
+                self.is_active=false;
+                println!("Closed");
+            },
+
         }
     }
 
@@ -57,8 +63,13 @@ impl SimpleComponent for Builder {
             set_visible: model.is_active,
             set_modal: true,
             set_title: Some("Kernel Manager"),
-            set_default_size: (500, 500),
+            set_default_size: (800, 600),
             set_vexpand: true,
+
+            connect_close_request[sender] => move |_| {
+                sender.input(BuilderMsg::CloseDialog);
+                gtk::Inhibit(true)
+            },
 
             gtk::Box{
                 set_valign: gtk::Align::Center,
