@@ -25,11 +25,12 @@ pub enum GeneralAppMessages {
 struct KernelListComponent {
     kernel_version: String,
     installed: bool,
+    user_managed: bool,
 }
 
 #[relm4::factory(async)]
 impl AsyncFactoryComponent for KernelListComponent {
-    type Init = (String, bool);
+    type Init = (String, (bool, bool));
     type Input = GeneralAppMessages;
     type Output = GeneralAppMessages;
     type CommandOutput = ();
@@ -84,7 +85,8 @@ impl AsyncFactoryComponent for KernelListComponent {
     ) -> Self {
         Self {
             kernel_version: init.0,
-            installed: init.1,
+            installed: init.1 .0,
+            user_managed: init.1 .1,
         }
     }
 
@@ -130,18 +132,18 @@ impl SimpleComponent for GeneralApp {
                     set_orientation: gtk::Orientation::Horizontal,
                     set_halign: gtk::Align::Center,
                     set_vexpand: true,
-    
+
                     gtk::Button {
                         set_label: "Add dummy kernel!",
                         set_css_classes: &["suggested-action", "pill"],
-    
+
                         set_valign: gtk::Align::Center,
-    
+
                         connect_clicked => GeneralAppMessages::Add
                     }
                 }
             },
-            
+
         }
 
     }
@@ -163,7 +165,7 @@ impl SimpleComponent for GeneralApp {
             model
                 .kernel_list
                 .guard()
-                .push_back((object.version.clone(), false));
+                .push_back((object.version.clone(), (false, false)));
         });
 
         unsafe {
@@ -183,27 +185,36 @@ impl SimpleComponent for GeneralApp {
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
         match msg {
             GeneralAppMessages::Add => {
-                unsafe{
-                    BUILDER_DIALOG.clone().unwrap().emit(BuilderMsg::Add("dummy".to_string(),false));                    
+                unsafe {
+                    BUILDER_DIALOG
+                        .clone()
+                        .unwrap()
+                        .emit(BuilderMsg::Add("dummy".to_string()));
                 }
                 self.kernel_list
                     .guard()
-                    .push_back(("dummy".to_string(), false));
+                    .push_back(("dummy".to_string(), (true, true)));
             }
             GeneralAppMessages::Remove(index) => {
-                if self
-                    .kernel_list
-                    .get(index.current_index())
-                    .unwrap()
-                    .installed
-                {
-                    // self.kernel_list.guard().remove(index.current_index());
-                    self.kernel_list
+                let object = self.kernel_list.get(index.current_index()).unwrap();
+                if object.installed {
+                    if object.user_managed {
+                        self.kernel_list.guard().remove(index.current_index());
+                        unsafe{
+                            BUILDER_DIALOG
+                            .clone()
+                            .unwrap()
+                            .emit(BuilderMsg::Remove(index.current_index()));
+                        }
+                    }
+                    else{
+                        self.kernel_list
                         .guard()
                         .get_mut(index.current_index())
                         .unwrap()
                         .installed = false;
-                    println!("Unimplemented");
+                        println!("Unimplemented");
+                    }
                 } else {
                     self.kernel_list
                         .guard()

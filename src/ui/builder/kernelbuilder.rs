@@ -1,7 +1,7 @@
-use std::rc::Rc;
+
 
 use relm4::component::*;
-use relm4::factory::AsyncFactoryVecDeque;
+
 use relm4::factory::*;
 use relm4::prelude::*;
 use adw::prelude::*;
@@ -19,7 +19,8 @@ pub struct Builder{
 
 #[derive(Debug)]
 pub enum BuilderMsg{
-    Add(String,bool),
+    Remove(usize),
+    Add(String),
     Show(DynamicIndex),
     Build,
     CloseDialog,
@@ -65,12 +66,16 @@ impl SimpleComponent for Builder {
                 self.is_active=false;
                 println!("Closed");
             },
-            BuilderMsg::Add(name,installed) =>{
+            BuilderMsg::Add(name) =>{
                 let kernel = Kernel{
                     version: name,
-                    url: "0000".to_string(),
+                    url: None,
+                    path: Some("./kernel".to_string()),
                 };
                 self.kernel_list.push(kernel);
+            }
+            BuilderMsg::Remove(index) => {
+                self.kernel_list.remove(index);
             }
 
         }

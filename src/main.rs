@@ -1,6 +1,4 @@
 use std::fs::read_to_string;
-#[feature(cell_leak)]
-
 use relm4::prelude::*;
 pub mod ui;
 use ui::{builder::lib::kernel::Kernel, main::GeneralApp};
@@ -27,8 +25,9 @@ fn parse_kernel_info() -> Vec<Kernel> {
             .unwrap()
             .replace("\"", "");
         let new_kernel_obj = Kernel {
-            url: download_url,
+            url: Some(download_url),
             version: format!("Linux {}", version_name),
+            path: None,
         };
         kernel_list.push(new_kernel_obj);
     });
