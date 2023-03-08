@@ -13,11 +13,11 @@ url="https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.18.19.tar.xz"
 [5.19]
 url="https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.19.17.tar.xz"
 
-[6.00]
+[6.0]
 url="https://mirrors.edge.kernel.org/pub/linux/kernel/v6.x/linux-6.0.9.tar.xz"
 
-[6.10]
+[6.1]
 url="https://mirrors.edge.kernel.org/pub/linux/kernel/v6.x/linux-6.1.15.tar.xz"
 
-[6.20]
+[6.2]
 url="https://mirrors.edge.kernel.org/pub/linux/kernel/v6.x/linux-6.2.tar.xz"

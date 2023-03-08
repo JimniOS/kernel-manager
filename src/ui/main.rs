@@ -1,15 +1,14 @@
-use std::rc::Rc;
 use super::builder;
+use adw::prelude::*;
 use builder::kernelbuilder::Builder;
 use builder::kernelbuilder::BuilderMsg;
 use builder::kernelbuilder::BuilderMsgOutput;
 use builder::lib::kernel::*;
-use adw::prelude::*;
 use relm4::component::*;
 use relm4::factory::AsyncFactoryVecDeque;
 use relm4::factory::*;
 use relm4::prelude::*;
-
+use std::rc::Rc;
 
 static mut BUILDER_DIALOG: Option<Rc<Controller<Builder>>> = None;
 
@@ -127,7 +126,22 @@ impl SimpleComponent for GeneralApp {
                     }
 
                 },
-            }
+                gtk::Box {
+                    set_orientation: gtk::Orientation::Horizontal,
+                    set_halign: gtk::Align::Center,
+                    set_vexpand: true,
+    
+                    gtk::Button {
+                        set_label: "Add dummy kernel!",
+                        set_css_classes: &["suggested-action", "pill"],
+    
+                        set_valign: gtk::Align::Center,
+    
+                        connect_clicked => GeneralAppMessages::Add
+                    }
+                }
+            },
+            
         }
 
     }
@@ -156,7 +170,7 @@ impl SimpleComponent for GeneralApp {
             BUILDER_DIALOG = Some(Rc::new(
                 Builder::builder()
                     .transient_for(root)
-                    .launch((_init.clone(),0))
+                    .launch((_init.clone(), 0))
                     .forward(sender.input_sender(), convert_alert_response),
             ));
         }
@@ -169,7 +183,12 @@ impl SimpleComponent for GeneralApp {
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
         match msg {
             GeneralAppMessages::Add => {
-                println!("Unimplemented");
+                unsafe{
+                    BUILDER_DIALOG.clone().unwrap().emit(BuilderMsg::Add("dummy".to_string(),false));                    
+                }
+                self.kernel_list
+                    .guard()
+                    .push_back(("dummy".to_string(), false));
             }
             GeneralAppMessages::Remove(index) => {
                 if self
@@ -196,7 +215,10 @@ impl SimpleComponent for GeneralApp {
             }
 
             GeneralAppMessages::OpenBuilder(index) => unsafe {
-                BUILDER_DIALOG.clone().unwrap().emit(BuilderMsg::Show(index));
+                BUILDER_DIALOG
+                    .clone()
+                    .unwrap()
+                    .emit(BuilderMsg::Show(index));
             },
 
             GeneralAppMessages::ChildFailedBuild => {
@@ -216,4 +238,3 @@ fn convert_alert_response(response: BuilderMsgOutput) -> GeneralAppMessages {
         BuilderMsgOutput::SuccessFullBuild => GeneralAppMessages::ChildSuccessBuild,
     }
 }
-

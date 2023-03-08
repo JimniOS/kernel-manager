@@ -1,7 +1,7 @@
 use std::fs::read_to_string;
+#[feature(cell_leak)]
 
 use relm4::prelude::*;
-
 pub mod ui;
 use ui::{builder::lib::kernel::Kernel, main::GeneralApp};
 

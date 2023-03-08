@@ -19,6 +19,7 @@ pub struct Builder{
 
 #[derive(Debug)]
 pub enum BuilderMsg{
+    Add(String,bool),
     Show(DynamicIndex),
     Build,
     CloseDialog,
@@ -40,7 +41,7 @@ impl SimpleComponent for Builder {
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self>{
 
-        let mut model = Self {
+        let model = Self {
             kernel_list: _init.0,
             index: _init.1,
             is_active:false,
@@ -64,6 +65,13 @@ impl SimpleComponent for Builder {
                 self.is_active=false;
                 println!("Closed");
             },
+            BuilderMsg::Add(name,installed) =>{
+                let kernel = Kernel{
+                    version: name,
+                    url: "0000".to_string(),
+                };
+                self.kernel_list.push(kernel);
+            }
 
         }
     }
