@@ -1,19 +1,25 @@
+use std::rc::Rc;
+
 use relm4::component::*;
 use relm4::factory::AsyncFactoryVecDeque;
 use relm4::factory::*;
 use relm4::prelude::*;
 use adw::prelude::*;
 
+use super::lib::kernel::Kernel;
+
 
 #[derive(Debug)]
 pub struct Builder{
+    index:u16,
+    kernel_list: Vec<Kernel>,
     is_active: bool,
     label: String,
 }
 
 #[derive(Debug)]
 pub enum BuilderMsg{
-    Show,
+    Show(DynamicIndex),
     Build,
     CloseDialog,
 }
@@ -25,7 +31,7 @@ pub enum BuilderMsgOutput{
 
 #[relm4::component(pub)]
 impl SimpleComponent for Builder {
-    type Init = ();
+    type Init = (Vec<Kernel>,u16);
     type Input = BuilderMsg;
     type Output = BuilderMsgOutput;
     fn init(
@@ -35,6 +41,8 @@ impl SimpleComponent for Builder {
     ) -> ComponentParts<Self>{
 
         let mut model = Self {
+            kernel_list: _init.0,
+            index: _init.1,
             is_active:false,
             label: "Hello world!".to_string(),
         };
@@ -45,7 +53,10 @@ impl SimpleComponent for Builder {
 
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>){
         match msg{
-            BuilderMsg::Show => {
+            BuilderMsg::Show(index) => {
+                self.index = index.current_index() as u16;
+                self.label=  self.kernel_list[self.index as usize].version.clone();
+        
                 self.is_active = true;
             }
             BuilderMsg::Build => println!("how did you call this?"),
@@ -77,6 +88,7 @@ impl SimpleComponent for Builder {
                 set_spacing: 32,
                 
                 gtk::Label{
+                    #[watch]
                     set_label: &format!("{}",model.label),
                     add_css_class: &"title-1",
                 }
