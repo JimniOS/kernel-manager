@@ -33,7 +33,7 @@ pub enum BuilderMsgOutput{
 
 #[relm4::component(pub)]
 impl SimpleComponent for Builder {
-    type Init = (Vec<Kernel>,u16);
+    type Init = (Vec<Kernel>,u16); // u16 = index
     type Input = BuilderMsg;
     type Output = BuilderMsgOutput;
     fn init(
@@ -66,9 +66,9 @@ impl SimpleComponent for Builder {
                 self.is_active=false;
                 println!("Closed");
             },
-            BuilderMsg::Add(name) =>{
+            BuilderMsg::Add(version) =>{
                 let kernel = Kernel{
-                    version: name,
+                    version,
                     url: None,
                     path: Some("./kernel".to_string()),
                 };
@@ -102,8 +102,8 @@ impl SimpleComponent for Builder {
                 
                 gtk::Label{
                     #[watch]
-                    set_label: &format!("{}",model.label),
-                    add_css_class: &"title-1",
+                    set_label: &model.label,
+                    add_css_class: "title-1",
                 }
             }
             

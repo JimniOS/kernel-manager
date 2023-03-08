@@ -14,16 +14,16 @@ fn parse_kernel_info() -> Vec<Kernel> {
     let tokens = file_content.split("\n\n");
     let mut kernel_list: Vec<Kernel> = vec![];
     tokens.for_each(|token| {
-        let sub_token = token.split("\n").collect::<Vec<&str>>();
-        let version_name = sub_token[0].replace("[", "").replace("]", "");
+        let sub_token = token.split('\n').collect::<Vec<&str>>();
+        let version_name = sub_token[0].replace(['[', ']'], "");
 
         let url = *sub_token.last().unwrap();
         let download_url = url
-            .split("=")
+            .split('=')
             .collect::<Vec<&str>>()
             .last()
             .unwrap()
-            .replace("\"", "");
+            .replace('\"', "");
         let new_kernel_obj = Kernel {
             url: Some(download_url),
             version: format!("Linux {}", version_name),
